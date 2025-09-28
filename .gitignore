@@ -2,7 +2,10 @@
 
 # C extensions
 *.so
+*.txt
+!requirements.txt
 
+*.docx
 # Packages
 *.egg
 *.egg-info
