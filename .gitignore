@@ -5,7 +5,8 @@
 *.txt
 !requirements.txt
 
-*.docx
+*.md
+!README.md
 # Packages
 *.egg
 *.egg-info
