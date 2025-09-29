@@ -17,4 +17,4 @@ login.login_view = 'login' #'login' is the function name for the login view
 db.init_app(app)
 migrate.init_app(app, db)
 
-from app import routes, models
+from app import routes, models, errors
