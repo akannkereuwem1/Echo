@@ -6,6 +6,7 @@ from flask_login import LoginManager
 import logging 
 from  logging.handlers import SMTPHandler, RotatingFileHandler
 import os
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -15,7 +16,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager(app)
 login.login_view = 'login' #'login' is the function name for the login view
-
+mail = Mail(app)
 
 
 db.init_app(app)
