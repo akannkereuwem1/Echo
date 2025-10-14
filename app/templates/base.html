@@ -1,24 +1,36 @@
 <!doctype html>
-<html>
+<html class="h-fulll bg-gray-900">
     <head>
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="{{ url_for('static', filename='src/output.css') }}">
         {% if title %}
         <title>{{ title }} - Microblog</title>
         {% else %}
         <title>Welcome to Microblog</title>
         {% endif %}
     </head>
-    <body>
-        <div>
-            Microblog:
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('explore') }}">Explore</a>
-            {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Login</a>
-            
-            {% else %}
-            <a href="{{ url_for('user', username=current_user.username) }}" >Profile</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% endif %}
+    <body class="h-full">
+        <div class="m-3">
+            <div class="flex justify-between">
+                <div class="flex w-auto">
+                    <img src="{{ url_for('static', filename='img/echo.svg') }}" alt="Echo" class="flex-none w-6 h-10" />
+                    <h2 class="flex-none w-32 mt-2 text-sm/6 font-medium text-gray-100">Echo</h2>
+                </div>
+                <div class="flex space-x-10 px-3">
+                    <a href="{{ url_for('index') }}" class="mt-2 text-sm/6 font-medium text-gray-100">Home</a>
+                <a href="{{ url_for('explore') }}" class="mt-2 text-sm/6 font-medium text-gray-100">Explore</a>
+                {% if current_user.is_anonymous %}
+                <a href="{{ url_for('login') }}" class="mt-2 text-sm/6 font-medium text-gray-100">Login</a>
+                
+                {% else %}
+                <a href="{{ url_for('user', username=current_user.username) }}" class="mt-2 text-sm/6 font-medium text-gray-100" >Profile</a>
+                <a href="{{ url_for('logout') }}" class="mt-2 text-sm/6 font-medium text-gray-100">Logout</a>
+                {% endif %}
+                </div>
+            </div>
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}
@@ -31,5 +43,6 @@
         {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
+        {{ moment.include_moment() }}
     </body>
 </html>
