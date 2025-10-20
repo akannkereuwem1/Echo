@@ -19,6 +19,7 @@ followers = sa.Table(
 )
 
 class User(UserMixin, db.Model):
+    
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True,
                                                 unique=True)
@@ -41,6 +42,8 @@ class User(UserMixin, db.Model):
         secondary=followers, primaryjoin=(followers.c.followed_id == id),
         secondaryjoin=(followers.c.follower_id == id),
         back_populates='following')
+    comments: so.WriteOnlyMapped['Comment'] = so.relationship(
+        back_populates='author')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -105,7 +108,10 @@ class User(UserMixin, db.Model):
         except:
             return
         return db.session.get(User, id)
+
+    
 class Post(db.Model):
+    # __tablename__ = 'posts'
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     body: so.Mapped[str] = so.mapped_column(sa.String(140))
     timestamp: so.Mapped[datetime] = so.mapped_column(
@@ -115,9 +121,27 @@ class Post(db.Model):
 
     author: so.Mapped[User] = so.relationship(back_populates='posts')
 
+    comments: so.WriteOnlyMapped['Comment'] = so.relationship(
+        back_populates='post')
+
     def __repr__(self):
         return '<Post {}>'.format(self.body)
     
+class Comment(db.Model):
+    # __tabelname__ = 'comments'
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    body: so.Mapped[str] = so.mapped_column(sa.String(140))
+    timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    disabled: so.Mapped[bool] = so.mapped_column(sa.Boolean, default=False)
+    author_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id))
+    post_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Post.id))
+
+    author: so.Mapped[User] = so.relationship(back_populates='comments')
+
+    post: so.Mapped[Post] = so.relationship(back_populates='comments')
+
+    
+
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))
